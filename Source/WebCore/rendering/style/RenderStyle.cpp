@@ -2933,6 +2933,11 @@ bool RenderStyle::hasReferenceFilterOnly() const
     return filterOperations.size() == 1 && filterOperations.at(0)->type() == FilterOperation::Type::Reference;
 }
 
+bool RenderStyle::hasAccumulatedFilterOutsets() const
+{
+    return !accumulatedFilterOutsets().isZero();
+}
+
 float RenderStyle::outlineWidth() const
 {
     auto& outline = m_nonInheritedData->backgroundData->outline;

@@ -82,6 +82,7 @@ inline void RenderStyle::setAlignSelfPosition(ItemPosition position) { m_nonInhe
 inline void RenderStyle::setAlignTracks(Vector<StyleContentAlignmentData> tracks) { SET_DOUBLY_NESTED(m_nonInheritedData, rareData, grid, alignTracks, WTFMove(tracks)); }
 inline void RenderStyle::setAppearance(StyleAppearance appearance) { SET_NESTED_PAIR(m_nonInheritedData, miscData, appearance, static_cast<unsigned>(appearance), effectiveAppearance, static_cast<unsigned>(appearance)); }
 inline void RenderStyle::setAppleColorFilter(const FilterOperations& ops) { SET_NESTED(m_rareInheritedData, appleColorFilter, operations, ops); }
+inline void RenderStyle::setAccumulatedFilterOutsets(IntOutsets outsets) { SET(m_rareInheritedData, accumulatedFilterOutsets, outsets); }
 inline void RenderStyle::setAspectRatio(double width, double height) { SET_NESTED_PAIR(m_nonInheritedData, miscData, aspectRatioWidth, width, aspectRatioHeight, height); }
 inline void RenderStyle::setAspectRatioType(AspectRatioType aspectRatioType) { SET_NESTED(m_nonInheritedData, miscData, aspectRatioType, static_cast<unsigned>(aspectRatioType)); }
 inline void RenderStyle::setBackfaceVisibility(BackfaceVisibility b) { SET_NESTED(m_nonInheritedData, rareData, backfaceVisibility, static_cast<unsigned>(b)); }

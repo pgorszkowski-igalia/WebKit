@@ -373,6 +373,7 @@ public:
     inline LayoutBoxExtent maskBoxImageOutsets() const;
 
     inline IntOutsets filterOutsets() const;
+    IntOutsets accumulatedFilterOutsets() const;
 
     Order rtlOrdering() const { return static_cast<Order>(m_inheritedFlags.rtlOrdering); }
     void setRTLOrdering(Order ordering) { m_inheritedFlags.rtlOrdering = static_cast<unsigned>(ordering); }
@@ -1007,6 +1008,7 @@ public:
     inline const FilterOperations& filter() const;
     inline bool hasFilter() const;
     bool hasReferenceFilterOnly() const;
+    bool hasAccumulatedFilterOutsets() const;
 
     inline FilterOperations& mutableAppleColorFilter();
     inline const FilterOperations& appleColorFilter() const;
@@ -1444,6 +1446,7 @@ public:
 
     inline void setFilter(const FilterOperations&);
     inline void setAppleColorFilter(const FilterOperations&);
+    inline void setAccumulatedFilterOutsets(IntOutsets outsets);
 
 #if ENABLE(FILTERS_LEVEL_2)
     inline void setBackdropFilter(const FilterOperations&);

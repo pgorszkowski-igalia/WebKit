@@ -70,6 +70,8 @@ struct GreaterThanOrSameSizeAsStyleRareInheritedData : public RefCounted<Greater
     TextAutospace textAutospace;
 
     ListStyleType listStyleType;
+
+    IntOutsets accumulatedFilterOutesets;
 };
 
 static_assert(sizeof(StyleRareInheritedData) <= sizeof(GreaterThanOrSameSizeAsStyleRareInheritedData), "StyleRareInheritedData should bit pack");
@@ -169,6 +171,7 @@ StyleRareInheritedData::StyleRareInheritedData()
     , textSpacingTrim(RenderStyle::initialTextSpacingTrim())
     , textAutospace(RenderStyle::initialTextAutospace())
     , listStyleType(RenderStyle::initialListStyleType())
+    , accumulatedFilterOutsets(IntOutsets())
 {
 }
 
@@ -276,6 +279,7 @@ inline StyleRareInheritedData::StyleRareInheritedData(const StyleRareInheritedDa
     , textSpacingTrim(o.textSpacingTrim)
     , textAutospace(o.textAutospace)
     , listStyleType(o.listStyleType)
+    , accumulatedFilterOutsets(o.accumulatedFilterOutsets)
 {
 }
 
@@ -349,6 +353,7 @@ bool StyleRareInheritedData::operator==(const StyleRareInheritedData& o) const
         && textEmphasisCustomMark == o.textEmphasisCustomMark
         && arePointingToEqualData(quotes, o.quotes)
         && appleColorFilter == o.appleColorFilter
+        && accumulatedFilterOutsets == o.accumulatedFilterOutsets
         && tabSize == o.tabSize
         && lineGrid == o.lineGrid
         && imageOrientation == o.imageOrientation

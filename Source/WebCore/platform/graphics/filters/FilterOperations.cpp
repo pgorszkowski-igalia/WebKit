@@ -95,19 +95,23 @@ IntOutsets FilterOperations::outsets() const
             int right = std::max(0, outsetSize.width() + dropShadowOperation.x());
             int bottom = std::max(0, outsetSize.height() + dropShadowOperation.y());
             int left = std::max(0, outsetSize.width() - dropShadowOperation.x());
-            
             auto outsets = IntOutsets { top, right, bottom, left };
             totalOutsets += outsets;
             break;
         }
         case FilterOperation::Type::Reference:
-            ASSERT_NOT_REACHED();
+            // FIXME: Need to compute outsets for reference filters. webkit.org/b/237538
             break;
         default:
             break;
         }
     }
     return totalOutsets;
+}
+
+IntOutsets FilterOperations::accumulatedFilterOutsets(IntOutsets parentOutsets) const
+{
+    return outsets() + parentOutsets;
 }
 
 bool FilterOperations::transformColor(Color& color) const
