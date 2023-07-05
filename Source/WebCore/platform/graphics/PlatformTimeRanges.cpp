@@ -35,16 +35,19 @@ namespace WebCore {
 
 PlatformTimeRanges::PlatformTimeRanges()
 {
+    fprintf(stdout, "PlatformTimeRanges::PlatformTimeRanges1 this: %p\n", this);fflush(stdout);
 }
 
 PlatformTimeRanges::PlatformTimeRanges(const MediaTime& start, const MediaTime& end)
 {
+    fprintf(stdout, "PlatformTimeRanges::PlatformTimeRanges2 this: %p\n", this);fflush(stdout);
     add(start, end);
 }
 
 PlatformTimeRanges::PlatformTimeRanges(Vector<Range>&& ranges)
     : m_ranges { WTFMove(ranges) }
 {
+    fprintf(stdout, "PlatformTimeRanges::PlatformTimeRanges3 this: %p\n", this);fflush(stdout);
 }
 
 const PlatformTimeRanges& PlatformTimeRanges::emptyRanges()
@@ -200,17 +203,16 @@ void PlatformTimeRanges::add(const MediaTime& start, const MediaTime& end)
 #endif
     ASSERT(start <= end);
 
-    unsigned overlappingArcIndex;
+    size_t overlappingArcIndex;
     Range addedRange { .start = start, .end = end };
 
     // For each present range check if we need to:
     // - merge with the added range, in case we are overlapping or contiguous
     // - Need to insert in place, we we are completely, not overlapping and not contiguous
     // in between two ranges.
-    //
-    // TODO: Given that we assume that ranges are correctly ordered, this could be optimized.
 
-    for (overlappingArcIndex = 0; overlappingArcIndex < m_ranges.size(); overlappingArcIndex++) {
+    // for (overlappingArcIndex = 0; overlappingArcIndex < m_ranges.size(); overlappingArcIndex++) {
+    for (overlappingArcIndex = findLastRangeIndexBefore(start, end); overlappingArcIndex < m_ranges.size(); overlappingArcIndex++) {
         if (addedRange.isOverlappingRange(m_ranges[overlappingArcIndex]) || addedRange.isContiguousWithRange(m_ranges[overlappingArcIndex])) {
             // We need to merge the addedRange and that range.
             addedRange = addedRange.unionWithOverlappingOrContiguousRange(m_ranges[overlappingArcIndex]);
@@ -236,6 +238,10 @@ void PlatformTimeRanges::add(const MediaTime& start, const MediaTime& end)
 
     // Now that we are sure we don't overlap with any range, just add it.
     m_ranges.insert(overlappingArcIndex, addedRange);
+
+    if (m_ranges.size() == 10000)
+        fprintf(stdout, "PlatformTimeRanges::add this: %p\n", this);fflush(stdout);
+
 }
 
 void PlatformTimeRanges::clear()
@@ -347,6 +353,33 @@ String PlatformTimeRanges::toString() const
 bool PlatformTimeRanges::operator==(const PlatformTimeRanges& other) const
 {
     return m_ranges == other.m_ranges;
+}
+
+size_t PlatformTimeRanges::findLastRangeIndexBefore(const MediaTime& start, const MediaTime& end) const
+{
+    ASSERT(start <= end);
+
+    if (m_ranges.isEmpty())
+        return 0;
+
+    const Range range { .start = start, .end = end };
+    size_t first, last, middle;
+    size_t index = 0;
+
+    first = 0;
+    last = m_ranges.size() - 1;
+    middle = first + ((last - first) / 2);
+
+    while (first < last && middle > 0) {
+        if (m_ranges[middle].isBeforeRange(range)) {
+            index = middle;
+            first = middle + 1;
+        } else
+            last = middle - 1;
+
+        middle = first + ((last - first) / 2);
+    }
+    return index;
 }
 
 }

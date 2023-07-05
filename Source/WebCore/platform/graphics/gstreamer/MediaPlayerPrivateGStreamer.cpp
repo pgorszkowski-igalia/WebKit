@@ -713,6 +713,8 @@ void MediaPlayerPrivateGStreamer::setPreload(MediaPlayer::Preload preload)
 
 const PlatformTimeRanges& MediaPlayerPrivateGStreamer::buffered() const
 {
+    fprintf(stdout, "MediaPlayerPrivateGStreamer::buffered\n");fflush(stdout);
+
     if (m_didErrorOccur || m_isLiveStream.value_or(false))
         return PlatformTimeRanges::emptyRanges();
 

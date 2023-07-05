@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>mock-media-source</title>
+    <script src="mock-media-source.js"></script>
+    <script src="../video-test.js"></script>
+    <script>
+    var source;
+    var sourceBuffer;
+    var initSegment;
+
+    if (window.internals)
+        internals.initializeMockMediaSource();
+
+    function runTest() {
+        findMediaElement();
+
+        source = new MediaSource();
+        waitForEventOn(source, 'sourceopen', sourceOpen);
+        run('video.src = URL.createObjectURL(source)');
+    }
+
+    function sourceOpen() {
+        run('sourceBuffer = source.addSourceBuffer("video/mock; codecs=mock")');
+        waitForEventOn(sourceBuffer, 'updateend', loadSamples, false, true);
+        initSegment = makeAInit(8, [makeATrack(1, 'mock', TRACK_KIND.VIDEO)]);
+        run('sourceBuffer.appendBuffer(initSegment)');
+    }
+
+    function loadSamples() {
+        const maximumGap = Math.floor(2002 / 24000 * 1000) / 1000;
+        const sampleDuration = 1000 * (1 - 2 * maximumGap);
+
+        const samplesArray = [];
+        samplesArray.push(makeASample(0, 0, sampleDuration, 1000, 1, SAMPLE_FLAG.SYNC));
+        for (i = 1; i < 10000; ++i) {
+            samplesArray.push(makeASample(i * 1000, i * 1000, sampleDuration, 1000, 1, SAMPLE_FLAG.NONE));
+        }
+
+        samples = concatenateSamples(samplesArray);
+
+        waitForEventOn(sourceBuffer, 'updateend', checkBuffered, false, true);
+        run('sourceBuffer.appendBuffer(samples)');
+    }
+
+    function checkBuffered() {
+        testExpected('sourceBuffer.buffered.length', 10000);
+        endTest();
+    }
+
+    </script>
+</head>
+<body onload="runTest()">
+    <div>This tests the SourceBuffer.buffered() API. This test will add 1000 samples with a gap above threshold (2002/24000) between each sample. The SourceBuffer should create 1000 separated ranges.</div>
+    <video></video>
+</body>
+</html>

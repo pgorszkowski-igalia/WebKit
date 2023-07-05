@@ -1,0 +1,12 @@
+This tests the SourceBuffer.buffered() API. This test will add 1000 samples with a gap above threshold (2002/24000) between each sample. The SourceBuffer should create 1000 separated ranges.
+
+RUN(video.src = URL.createObjectURL(source))
+EVENT(sourceopen)
+RUN(sourceBuffer = source.addSourceBuffer("video/mock; codecs=mock"))
+RUN(sourceBuffer.appendBuffer(initSegment))
+EVENT(updateend)
+RUN(sourceBuffer.appendBuffer(samples))
+EVENT(updateend)
+EXPECTED (sourceBuffer.buffered.length == '10000') OK
+END OF TEST
+

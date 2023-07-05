@@ -58,6 +58,49 @@
 #include <wtf/IsoMallocInlines.h>
 #include <wtf/Scope.h>
 
+class Timer
+{
+public:
+    void start()
+    {
+        m_StartTime = std::chrono::system_clock::now();
+        m_bRunning = true;
+    }
+    
+    void stop()
+    {
+        m_EndTime = std::chrono::system_clock::now();
+        m_bRunning = false;
+    }
+    
+    double elapsedMilliseconds()
+    {
+        std::chrono::time_point<std::chrono::system_clock> endTime;
+        
+        if(m_bRunning)
+        {
+            endTime = std::chrono::system_clock::now();
+        }
+        else
+        {
+            endTime = m_EndTime;
+        }
+        
+        return std::chrono::duration_cast<std::chrono::milliseconds>(endTime - m_StartTime).count();
+    }
+    
+    double elapsedSeconds()
+    {
+        return elapsedMilliseconds() / 1000.0;
+    }
+
+private:
+    std::chrono::time_point<std::chrono::system_clock> m_StartTime;
+    std::chrono::time_point<std::chrono::system_clock> m_EndTime;
+    bool                                               m_bRunning = false;
+};
+
+
 namespace WebCore {
 
 WTF_MAKE_ISO_ALLOCATED_IMPL(MediaSource);
@@ -256,6 +299,8 @@ void MediaSource::completeSeek()
 
 Ref<TimeRanges> MediaSource::seekable()
 {
+    fprintf(stdout, "MediaSource::seekable\n");fflush(stdout);
+
     // 6. HTMLMediaElement Extensions, seekable
     // W3C Editor's Draft 16 September 2016
     // https://rawgit.com/w3c/media-source/45627646344eea0170dd1cbc5a3d508ca751abb8/media-source-respec.html#htmlmediaelement-extensions
@@ -1177,6 +1222,8 @@ void MediaSource::sourceBufferBufferedChanged()
 
 void MediaSource::updateBufferedIfNeeded(bool force)
 {
+    fprintf(stdout, "MediaSource::updateBufferedIfNeeded\n");fflush(stdout);
+    ::Timer timer; timer.start();
     if (!force && m_activeSourceBuffers->length() && std::all_of(m_activeSourceBuffers->begin(), m_activeSourceBuffers->end(), [](auto& buffer) { return !buffer->isBufferedDirty(); }))
         return;
 
@@ -1227,6 +1274,8 @@ void MediaSource::updateBufferedIfNeeded(bool force)
         // 5.4 Replace the ranges in intersection ranges with the new intersection ranges.
         m_buffered.intersectWith(sourceRanges);
     }
+    fprintf(stdout, "MediaSource::updateBufferedIfNeeded m_buffered: %d, time: %f\n", m_buffered.length(), timer.elapsedMilliseconds());fflush(stdout);
+
 }
 
 #if !RELEASE_LOG_DISABLED

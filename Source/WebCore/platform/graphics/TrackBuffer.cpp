@@ -31,6 +31,49 @@
 #include "Logging.h"
 #include <wtf/CryptographicallyRandomNumber.h>
 
+class Timer
+{
+public:
+    void start()
+    {
+        m_StartTime = std::chrono::system_clock::now();
+        m_bRunning = true;
+    }
+    
+    void stop()
+    {
+        m_EndTime = std::chrono::system_clock::now();
+        m_bRunning = false;
+    }
+    
+    double elapsedMilliseconds()
+    {
+        std::chrono::time_point<std::chrono::system_clock> endTime;
+        
+        if(m_bRunning)
+        {
+            endTime = std::chrono::system_clock::now();
+        }
+        else
+        {
+            endTime = m_EndTime;
+        }
+        
+        return std::chrono::duration_cast<std::chrono::milliseconds>(endTime - m_StartTime).count();
+    }
+    
+    double elapsedSeconds()
+    {
+        return elapsedMilliseconds() / 1000.0;
+    }
+
+private:
+    std::chrono::time_point<std::chrono::system_clock> m_StartTime;
+    std::chrono::time_point<std::chrono::system_clock> m_EndTime;
+    bool                                               m_bRunning = false;
+};
+
+
 namespace WebCore {
 
 static inline MediaTime roundTowardsTimeScaleWithRoundingMargin(const MediaTime& time, uint32_t timeScale, const MediaTime& roundingMargin)
@@ -168,6 +211,8 @@ MediaTime TrackBuffer::findSeekTimeForTargetTime(const MediaTime& targetTime, co
 
 PlatformTimeRanges TrackBuffer::removeSamples(const DecodeOrderSampleMap::MapType& samples, const char* logPrefix)
 {
+    ::Timer timer;
+    timer.start();
 #if !RELEASE_LOG_DISABLED
     auto logId = Logger::LogSiteIdentifier(logClassName(), logPrefix, logIdentifier());
     MediaTime earliestSample = MediaTime::positiveInfiniteTime();
@@ -241,6 +286,9 @@ PlatformTimeRanges TrackBuffer::removeSamples(const DecodeOrderSampleMap::MapTyp
     if (bytesRemoved)
         DEBUG_LOG_IF(m_logger, logId, "removed ", bytesRemoved, ", start = ", earliestSample, ", end = ", latestSample);
 #endif
+
+    fprintf(stdout, "TrackBuffer::removeSamples time: %f\n", timer.elapsedMilliseconds());fflush(stdout);
+
 
     return erasedRanges;
 }

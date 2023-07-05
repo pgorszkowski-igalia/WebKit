@@ -72,6 +72,7 @@ fast/scrolling/ipad [ Skip ]
 fast/speechsynthesis/mac [ Skip ]
 fast/text/mac [ Skip ]
 scrollingcoordinator [ Skip ]
+media/media-source/media-source-gap-above-threshold.html [ Slow ]
 media/media-vp8-hiddenframes.html [ Skip ] # Requires MediaFormatReader and VP8 decoder
 media/ios [ Skip ]
 media/audioSession/ios [ Skip ]
