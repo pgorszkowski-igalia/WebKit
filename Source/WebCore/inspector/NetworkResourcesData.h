@@ -31,7 +31,7 @@
 
 #include "InspectorPageAgent.h"
 #include "SharedBuffer.h"
-#include <wtf/Deque.h>
+#include <wtf/ListHashSet.h>
 #include <wtf/RobinHoodHashMap.h>
 #include <wtf/TZoneMalloc.h>
 #include <wtf/WallTime.h>
@@ -157,7 +157,7 @@ private:
     void ensureNoDataForRequestId(const String& requestId);
     bool ensureFreeSpace(size_t);
 
-    Deque<String> m_requestIdsDeque;
+    ListHashSet<String> m_requestIdsDeque;
     MemoryCompactRobinHoodHashMap<String, std::unique_ptr<ResourceData>> m_requestIdToResourceDataMap;
     size_t m_contentSize { 0 };
     size_t m_maximumResourcesContentSize;
