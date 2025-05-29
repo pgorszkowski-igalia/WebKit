@@ -1050,6 +1050,30 @@ webkit_web_view_get_default_content_security_policy  (WebKitWebView             
  */
 #endif
 
+WEBKIT_API void
+webkit_web_view_onstart                              (WebKitWebView             *web_view);
+
+WEBKIT_API void
+webkit_web_view_onpause                              (WebKitWebView             *web_view);
+
+WEBKIT_API void
+webkit_web_view_onactivate                           (WebKitWebView             *web_view);
+
+WEBKIT_API void
+webkit_web_view_onsuspend                            (WebKitWebView             *web_view);
+
+WEBKIT_API void
+webkit_web_view_onresume                             (WebKitWebView             *web_view);
+
+WEBKIT_API void
+webkit_web_view_onhibernate                          (WebKitWebView             *web_view);
+
+WEBKIT_API void
+webkit_web_view_onrestore                            (WebKitWebView             *web_view);
+
+WEBKIT_API void
+webkit_web_view_ondestroy                            (WebKitWebView             *web_view);
+
 G_END_DECLS
 
 #endif

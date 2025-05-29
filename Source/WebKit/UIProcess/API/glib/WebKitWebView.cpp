@@ -5801,3 +5801,111 @@ webkit_web_view_get_default_content_security_policy(WebKitWebView* webView)
 
     return webView->priv->defaultContentSecurityPolicy.data();
 }
+
+/**
+ * webkit_web_view_onstart:
+ * @web_view: a #WebKitWebView
+ *
+ * Since: x
+ */
+void webkit_web_view_onstart(WebKitWebView *webView)
+{
+    g_return_if_fail(WEBKIT_IS_WEB_VIEW(webView));
+
+    printf("webkit_web_view_onstart\n");
+
+    // auto viewStateFlags = webView->priv->view->viewState();
+    // viewStateFlags.remove(WebCore::ActivityState::IsInWindow);
+    // webView->priv->view->setViewState(viewStateFlags);
+}
+
+/**
+ * webkit_web_view_onpause:
+ * @web_view: a #WebKitWebView
+ *
+ * Since: x
+ */
+void webkit_web_view_onpause(WebKitWebView *webView)
+{
+    g_return_if_fail(WEBKIT_IS_WEB_VIEW(webView));
+
+    printf("webkit_web_view_onpause\n");
+}
+
+/**
+ * webkit_web_view_onactivate:
+ * @web_view: a #WebKitWebView
+ *
+ * Since: x
+ */
+void webkit_web_view_onactivate(WebKitWebView *webView)
+{
+    g_return_if_fail(WEBKIT_IS_WEB_VIEW(webView));
+
+    printf("webkit_web_view_onactivate\n");
+}
+
+/**
+ * webkit_web_view_onsuspend:
+ * @web_view: a #WebKitWebView
+ *
+ * Since: x
+ */
+void webkit_web_view_onsuspend(WebKitWebView *webView)
+{
+    g_return_if_fail(WEBKIT_IS_WEB_VIEW(webView));
+
+    printf("webkit_web_view_onsuspend\n");
+}
+
+/**
+ * webkit_web_view_onresume:
+ * @web_view: a #WebKitWebView
+ *
+ * Since: x
+ */
+void webkit_web_view_onresume(WebKitWebView *webView)
+{
+    g_return_if_fail(WEBKIT_IS_WEB_VIEW(webView));
+
+    printf("webkit_web_view_onresume\n");
+}
+
+/**
+ * webkit_web_view_onhibernate:
+ * @web_view: a #WebKitWebView
+ *
+ * Since: x
+ */
+void webkit_web_view_onhibernate(WebKitWebView *webView)
+{
+    g_return_if_fail(WEBKIT_IS_WEB_VIEW(webView));
+
+    printf("webkit_web_view_onhibernate\n");
+}
+
+/**
+ * webkit_web_view_onrestore:
+ * @web_view: a #WebKitWebView
+ *
+ * Since: x
+ */
+void webkit_web_view_onrestore(WebKitWebView *webView)
+{
+    g_return_if_fail(WEBKIT_IS_WEB_VIEW(webView));
+
+    printf("webkit_web_view_onrestore\n");
+}
+
+/**
+ * webkit_web_view_ondestroy:
+ * @web_view: a #WebKitWebView
+ *
+ * Since: x
+ */
+void webkit_web_view_ondestroy(WebKitWebView *webView)
+{
+    g_return_if_fail(WEBKIT_IS_WEB_VIEW(webView));
+
+    printf("webkit_web_view_ondestroy\n");
+}
